@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav>
+      <h1 style="cursor: pointer" onclick="window.location.href ='/index.html'">TANCET 2024 Preparation</h1>
+    </nav>
+    <div class="sidebar" id="sidebar" style="left: -100%;">
+      <ul>
+        <button onclick="window.location.href='/'">Home</button>
+        <button onclick="window.location.href = '/dashboard.html'">Dashboard</button>
+      </ul>
+    </div>
+
+    <div class="hamburger" id="hamburger">&#9776;</div>
+
+    <main>
+      <h2>Login</h2>
+      <form id="loginForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required /><br /><br />
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required /><br /><br />
+        <button type="submit">Login</button>
+      </form>
+      <br />
+      <div id="message" style="color: red"></div>
+
+      <br />
+      <h4>Note:</h4>
+      <ul>
+        <li><p>Your Registration Number is your Username and Contact number is your Password.</p></li>
+        <li>
+          <p>All Registrations will be manually verified before creating account. So Kindly check after 4-6 hours after Registration.</p>
+        </li>
+        <li>
+          <p>
+            For new Registration:
+            <a href="https://docs.google.com/forms/d/13WVM9GJ92FwRp2f0o02ZOV4ViilZ4PF4UUsXsHsjCIc/viewform?edit_requested=true#responses"
+              >https://docs.google.com/forms/d/13WVM9GJ92FwRp2f0o02ZOV4ViilZ4PF4UUsXsHsjCIc/viewform?edit_requested=true#responses</a
+            >
+          </p>
+        </li>
+        <li>
+          <p>For any assistance: <a href="https://t.me/tancet_2024">https://t.me/tancet_2024</a></p>
+        </li>
+      </ul>
+    </main>
+
+    <script>
+      const hamburger = document.getElementById('hamburger')
+      const sidebar = document.getElementById('sidebar')
+      hamburger.addEventListener('click', function () {
+        sidebar.style.left = sidebar.style.left === '-100%' ? '0' : '-100%'
+      })
+
+      document.getElementById('loginForm').addEventListener('submit', function (event) {
+        event.preventDefault()
+
+        var username = document.getElementById('username').value
+        var password = document.getElementById('password').value
+
+        // Send username and password to server
+        fetch('https://tancet-api.vercel.app/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username: username, password: password }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              localStorage.setItem('token', data.token)
+              window.location.href = '/dashboard.html'
+            } else {
+              document.getElementById('message').innerText = 'Invalid username or password'
+            }
+          })
+          .catch((error) => {
+            console.error('Error:', error)
+          })
+      })
+    </script>
+  </body>
+</html>

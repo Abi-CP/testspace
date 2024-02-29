@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Download</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav>
+      <h1 style="cursor: pointer" onclick="window.location.href ='/index.html'">TANCET 2024 Preparation</h1>
+    </nav>
+    <div class="sidebar" id="sidebar" style="left: -100%;">
+
+      <ul>
+        <button onclick="window.location.href='/'">Home</button>
+        <button
+          class="logoutBtn"
+          onclick="localStorage.removeItem('token'); // Remove token from local storage
+    window.location.reload()"
+        >
+          Log out
+        </button>
+        <button onclick="window.location.href = '/dashboard.html'">Dashboard</button>
+      </ul>
+    </div>
+
+    <div class="hamburger" id="hamburger">&#9776;</div>
+
+    <main>
+      <h1>Download OMR Answer Sheet</h1>
+      <p>Please do not fill anything (even register number) until the start of exam. So that you could test your Time Management.</p>
+      <button id="viewInNewTabBtn">View in New Tab</button>
+      <button id="downloadBtn">Download</button>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.16.0/pdf-lib.min.js"></script>
+    <script>
+      const hamburger = document.getElementById('hamburger')
+      const sidebar = document.getElementById('sidebar')
+      hamburger.addEventListener('click', function () {
+        sidebar.style.left = sidebar.style.left === '-100%' ? '0' : '-100%'
+      })
+      const token = localStorage.getItem('token')
+      if (!token) {
+        // If token is not found, redirect to the login page
+        window.location.href = '/login.html'
+      }
+
+      // Fetch user details using the token
+      fetch('https://tancet-api.vercel.app/download', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            const userDetails = data
+            const rno = userDetails.rno
+            const name = userDetails.name
+
+            // Add event listener inside the fetch block
+            document.getElementById('viewInNewTabBtn').addEventListener('click', async () => {
+              await generatePDFAndOpen(false) // Open in new tab
+            })
+
+            document.getElementById('downloadBtn').addEventListener('click', async () => {
+              await generatePDFAndOpen(true) // Download
+            })
+
+            async function generatePDFAndOpen(download) {
+              // Hardcoded rno
+              const footer = `${rno}\t${name}\t${new Date()}`
+
+              // Load the PDF file from the public directory
+              const pdfUrl = 'OMR_Sheet.pdf' // Update with the correct URL
+              const response = await fetch(pdfUrl)
+              const arrayBuffer = await response.arrayBuffer()
+
+              const pdfDoc = await PDFLib.PDFDocument.load(new Uint8Array(arrayBuffer))
+              const page = pdfDoc.getPage(0) // Modify the first page (index starts from 0)
+
+              const { width, height } = page.getSize()
+              console.log(width + ',' + height)
+              const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica)
+
+              page.drawText(rno, {
+                x: 52,
+                y: height - 78,
+                size: 10,
+                font: font,
+                color: PDFLib.rgb(0.91, 0.15, 0.52),
+              })
+
+              page.drawText(footer, {
+                x: 40,
+                y: height - 815,
+                size: 8,
+                font: font,
+                color: PDFLib.rgb(0.91, 0.15, 0.52),
+              })
+
+              // Flatten the PDF form fields
+              pdfDoc.getForm().flatten()
+
+              const modifiedPdfBytes = await pdfDoc.save()
+              const blob = new Blob([modifiedPdfBytes], { type: 'application/pdf' })
+
+              if (download) {
+                const downloadLink = document.createElement('a')
+                downloadLink.href = window.URL.createObjectURL(blob)
+                downloadLink.download = `${rno}_OMR.pdf`
+                downloadLink.click()
+              } else {
+                const pdfBlobUrl = URL.createObjectURL(blob)
+                window.open(pdfBlobUrl, '_blank') // Open PDF in new tab
+              }
+
+              // Redirect to dashboard
+              window.location.href = '/dashboard.html'
+            }
+          } else {
+            // Redirect to login page if not authenticated
+            window.location.href = '/login.html'
+          }
+        })
+        .catch((error) => console.error('Error fetching user details:', error))
+    </script>
+  </body>
+</html>

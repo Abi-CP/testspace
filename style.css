@@ -1,0 +1,151 @@
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
+    sans-serif;
+  overflow-wrap: break-word;
+}
+nav {
+  background-color: #0084ff;
+  color: #fff;
+  text-align: center;
+  position: fixed;
+  height: 10vh;
+  width: 80vw;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 10vw;
+  display: flex;
+  justify-content: space-between;
+}
+nav h1 {
+  text-align: center;
+  align-self: center;
+  margin: 0;
+}
+.sidebar {
+  background-color: #f4f4f4;
+  padding: 20px;
+  position: fixed;
+  top: 0;
+  left: -100%; /* Initially hidden */
+  width: 250px;
+  height: 100%;
+  overflow-y: auto;
+  z-index: 1000;
+  transition: left 0.3s ease-in-out; /* Transition for smooth animation */
+}
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+.sidebar ul li {
+  margin-bottom: 10px;
+}
+.sidebar ul li a {
+  color: #333;
+  text-decoration: none;
+}
+.hamburger {
+  font-size: 2rem;
+  position: fixed;
+  top: 2.2vh;
+  left: 5px;
+  cursor: pointer;
+  z-index: 1001;
+  max-width: 200px;
+}
+
+main {
+  margin-top: 15vh;
+  padding: 0 10vw;
+}
+
+iframe {
+  width: 94%;
+  height: 1400px;
+}
+
+button {
+  padding: 10px 20px; /* Add padding to the button */
+  background-color: #0084ff; /* Set background color */
+  color: #fff; /* Set text color */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Add border radius */
+  cursor: pointer; /* Add cursor pointer */
+  font-size: 16px; /* Set font size */
+}
+
+/* Style the button on hover */
+button:hover {
+  background-color: #0056b3; /* Change background color on hover */
+}
+
+/* Add these styles to your existing style.css file */
+
+/* Button styles */
+.loginBtn,
+.logoutBtn {
+  background-color: #0084ff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.loginBtn:hover,
+.logoutBtn:hover {
+  background-color: #0056b3;
+}
+
+/* Sidebar styles */
+.sidebar {
+  /* padding-top: 15vh; */
+  padding: 15vh 2vw 0vw 5vw;
+  margin-top: 10vh;
+  position: fixed;
+  top: 0;
+  width: 200px; /* Adjust width as needed */
+  height: 85vh;
+  background-color: #caeeff;
+  transition: left 0.3s ease;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  border: 1px solid black;
+  margin-bottom: 2.5vh;
+  border-radius: 5px;
+  font-size: 16px;
+  color: black;
+  font-weight: bold;
+}
+
+.sidebar button:hover {
+  background-color: #ddd;
+}
+
+@media only screen and (max-width: 768px) {
+  #navMenu {
+    display: none;
+  }
+
+  .sidebar{
+  padding: 10vh 5vw 0vw 10vw;
+
+  }
+}
