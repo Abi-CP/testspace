@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Answer Key</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      #appeal {
+        background-color: #32cd32;
+        color: #fff;
+      }
+      #appeal:hover {
+        background-color: #228b22;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <h1 style="cursor: pointer" onclick="window.location.href ='/index.html'">TANCET 2024 Preparation</h1>
+      <div id="navMenu">
+        <button onclick="window.location.href = '/dashboard.html'">Dashboard</button>
+      </div>
+      <!-- Initially hidden -->
+    </nav>
+
+    <div class="sidebar" id="sidebar" style="left: -100%">
+      <ul>
+        <button onclick="window.location.href='/'">Home</button>
+        <button onclick="window.location.href = '/dashboard.html'">Dashboard</button>
+        <button onclick="window.location.href = '/answerkey.html'">Tentative Answer key</button>
+        <button class="logoutBtn" onclick="localStorage.removeItem('token'); window.location.reload()">Log out</button>
+        <button onclick="window.location.href = '/upload.html'">Upload Answer Sheet</button>
+      </ul>
+    </div>
+
+    <div class="hamburger" id="hamburger">&#9776;</div>
+
+    <main>
+      <h1>Tentative Answer Sheet</h1>
+
+      <button onclick="window.location.href = 'https://drive.google.com/file/d/1uWAuBT0-PsUFDXXRUT4G8wWHRgSzk9kq/view?usp=drive_link'">
+        Answer Key - MCA
+      </button>
+      <br /><br />
+      <button onclick="window.location.href = 'https://drive.google.com/file/d/1NrT4aF-7PyWZazDW3ga_8uRWaz2Enz_Z/view?usp=drive_link'">
+        Answer Key - MBA
+      </button>
+      <br /><br /><br />
+      <button id="appeal">Appeal</button>
+    </main>
+    <script>
+      const hamburger = document.getElementById('hamburger')
+      const sidebar = document.getElementById('sidebar')
+      hamburger.addEventListener('click', function () {
+        sidebar.style.left = sidebar.style.left === '-100%' ? '0' : '-100%'
+      })
+
+      const token = localStorage.getItem('token')
+      if (!token) {
+        // If token is not found, redirect to the login page
+        window.location.href = '/login.html'
+      }
+
+      // Validate user authentication by sending token to the dashboard endpoint
+      fetch('https://tancet-api.vercel.app/dashboard', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (!data.success) {
+            // If authentication fails, remove token and redirect to login page
+            localStorage.removeItem('token')
+            window.location.href = '/login.html'
+          } else {
+            const name = data.name
+            const rno = data.rno
+
+            const button = document.getElementById('appeal')
+            button.addEventListener('click', function () {
+              window.location.href = `https://docs.google.com/forms/d/e/1FAIpQLScNSPAugtSivnnfW_Wi-CbZEmLhQRTzheRE9ovEBSyaqsFwrA/viewform?usp=pp_url&entry.2054614620=${rno}&entry.2067831361=${name}`
+
+              window.location.href = '/index.html'
+            })
+          }
+        })
+    </script>
+  </body>
+</html>

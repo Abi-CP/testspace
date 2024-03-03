@@ -92,6 +92,7 @@
         <button onclick="window.location.href='/'">Home</button>
         <button onclick="window.location.href = '/dashboard.html'">Dashboard</button>
         <button onclick="window.location.href = '/upload.html'">Upload Answer Sheet</button>
+        <button onclick="window.location.href = '/answerkey.html'">Tentative Answer key</button>
         <button class="logoutBtn" onclick="localStorage.removeItem('token'); window.location.reload()">Log out</button>
       </ul>
     </div>
@@ -101,6 +102,15 @@
     <main>
       <div class="container">
         <h1>Notice Board</h1>
+        <div class="notice">
+          <h2>Answer Key and Results:</h2>
+          <p>
+            Tenatative Answer Key will be published today (03.03.2024) evening 06.00 PM.. You can check and appeal upto tonight 10.00 PM.
+            We'll finalise the answer key by tomorrow (04.03.2024) and publish results on or before wednesday (Tentative).
+          </p>
+          <button class="btn" onclick="window.location.href='/answerkey.html'">Answer Key (Tenatative)</button>
+
+        </div>
         <div class="notice">
           <h2>Upload OMR Answer Sheet</h2>
 
