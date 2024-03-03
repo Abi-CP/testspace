@@ -63,20 +63,32 @@
   </head>
   <body>
     <nav>
-      <h1 style="cursor: pointer" onclick="window.location.href ='/index.html'">TANCET 2024 Preparation</h1>
+      <h1 style="cursor: pointer" onclick="window.location.href ='/index.html'">
+        TANCET 2024 Preparation
+      </h1>
 
       <div id="navMenu">
-        <button onclick="window.location.href = '/dashboard.html'">Dashboard</button>
-        
+        <button onclick="window.location.href = '/dashboard.html'">
+          Dashboard
+        </button>
       </div>
       <!-- Initially hidden -->
     </nav>
     <div class="sidebar" id="sidebar" style="left: -100%">
       <ul>
         <button onclick="window.location.href='/'">Home</button>
-        <button onclick="window.location.href = '/dashboard.html'">Dashboard</button>
-        <button onclick="window.location.href = '/upload.html'">Upload Answer Sheet</button>
-        <button class="logoutBtn" onclick="localStorage.removeItem('token'); window.location.reload()">Log out</button>
+        <button onclick="window.location.href = '/dashboard.html'">
+          Dashboard
+        </button>
+        <button onclick="window.location.href = '/upload.html'">
+          Upload Answer Sheet
+        </button>
+        <button
+          class="logoutBtn"
+          onclick="localStorage.removeItem('token'); window.location.reload()"
+        >
+          Log out
+        </button>
       </ul>
     </div>
 
@@ -89,10 +101,19 @@
       </div>
       <br />
 
-      <button id="mcaQn" class="qnBtn disabled">Download Question Paper [MCA]</button><br />
-      <button id="mbaQn" class="qnBtn disabled">Download Question Paper [MBA]</button>
+      <button id="mcaQn" class="qnBtn disabled">
+        Download Question Paper [MCA]</button
+      ><br />
+      <button id="mbaQn" class="qnBtn disabled">
+        Download Question Paper [MBA]
+      </button>
+      <p style="color: red">
+        MBA Test is postponed by 30 mins.. <br />
+        Exam will start by 2.30 PM <br />
+        Submission Time: 4.35 PM
+      </p>
       <br /><br />
-      <div id="tableContainer" style="display: none;">
+      <div id="tableContainer" style="display: none">
         <h2>Marksheet</h2>
         <table id="marksTable">
           <thead>
@@ -121,7 +142,9 @@
       </div>
       <br />
 
-      <button onclick="window.location.href='/download.html'">Download Answer Sheet</button>
+      <button onclick="window.location.href='/download.html'">
+        Download Answer Sheet
+      </button>
       <button
         class="logoutBtn"
         onclick="localStorage.removeItem('token'); // Remove token from local storage
@@ -132,86 +155,94 @@
     </main>
 
     <script>
-      const hamburger = document.getElementById('hamburger')
-      const sidebar = document.getElementById('sidebar')
-      hamburger.addEventListener('click', function () {
-        sidebar.style.left = sidebar.style.left === '-100%' ? '0' : '-100%'
-      })
-      const token = localStorage.getItem('token')
+      const hamburger = document.getElementById("hamburger");
+      const sidebar = document.getElementById("sidebar");
+      hamburger.addEventListener("click", function () {
+        sidebar.style.left = sidebar.style.left === "-100%" ? "0" : "-100%";
+      });
+      const token = localStorage.getItem("token");
       if (!token) {
         // If token is not found, redirect to the login page
-        window.location.href = '/login.html'
+        window.location.href = "/login.html";
       }
 
-      var now = new Date()
-      console.log(now)
-      var targetTime1 = new Date()
-      targetTime1.setHours(9, 58, 30, 0)
-      var delay1 = targetTime1 - now
+      var now = new Date();
+      console.log(now);
+      var targetTime1 = new Date();
+      targetTime1.setHours(9, 58, 30, 0);
+      var delay1 = targetTime1 - now;
 
-      var targetTime2 = new Date()
-      targetTime2.setHours(12, 58, 30, 0)
-      var delay2 = targetTime2 - now
+      var targetTime2 = new Date();
+      targetTime2.setHours(2, 28, 30, 0);
+      var delay2 = targetTime2 - now;
 
       // Call enableButton function after the calculated delay
       if (delay1 < 0) {
-        enableButton('mcaQn')
+        enableButton("mcaQn");
       } else {
-        setTimeout(() => enableButton('mcaQn'), delay1)
+        setTimeout(() => enableButton("mcaQn"), delay1);
       }
 
       if (delay2 < 0) {
-        enableButton('mbaQn')
+        enableButton("mbaQn");
       } else {
-        setTimeout(() => enableButton('mbaQn'), delay2)
+        setTimeout(() => enableButton("mbaQn"), delay2);
       }
 
       function enableButton(id) {
-        var button = document.getElementById(id)
-        button.classList.remove('disabled')
-        button.classList.add('enabled')
-        button.disabled = false
+        var button = document.getElementById(id);
+        button.classList.remove("disabled");
+        button.classList.add("enabled");
+        button.disabled = false;
 
-        if (id == 'mcaQn') {
-          button.addEventListener('click', function () {
-            window.location.href = 'https://drive.google.com/drive/folders/17KrcpEnkjlKQ0mHt_d_AG5ys4BJw-qQi?usp=drive_link'
-          })
-        } else if (id == 'mbaQn') {
-          button.addEventListener('click', function () {
-            window.location.href = 'https://drive.google.com/drive/folders/16Xn8DlrljFWT0Fc_fAaX9SMlqHCATZCy?usp=drive_link'
-          })
+        if (id == "mcaQn") {
+          button.addEventListener("click", function () {
+            window.location.href =
+              "https://drive.google.com/drive/folders/17KrcpEnkjlKQ0mHt_d_AG5ys4BJw-qQi?usp=drive_link";
+          });
+        } else if (id == "mbaQn") {
+          button.addEventListener("click", function () {
+            window.location.href =
+              "https://drive.google.com/drive/folders/16Xn8DlrljFWT0Fc_fAaX9SMlqHCATZCy?usp=drive_link";
+          });
         }
       }
 
       // Fetch user details using the token
-      fetch('https://tancet-api.vercel.app/dashboard', {
-        method: 'GET',
+      fetch("https://tancet-api.vercel.app/dashboard", {
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: token,
         },
       })
         .then((response) => response.json())
         .then((data) => {
           if (data.success) {
-            const userDetails = data
+            const userDetails = data;
             // const username = userDetails.username // Extract username from the fetched data
             // Display user details on the page
-            document.getElementById('userDetails').innerHTML = `
+            document.getElementById("userDetails").innerHTML = `
       <p>Name: ${userDetails.name}</p>
       <p>Register Number: ${userDetails.rno}</p>
       <p>Course(s): ${
-        userDetails.courseid === 1 ? 'MCA' : userDetails.courseid === 2 ? 'MBA' : userDetails.courseid === 3 ? 'MCA, MBA' : 'Unknown'
+        userDetails.courseid === 1
+          ? "MCA"
+          : userDetails.courseid === 2
+          ? "MBA"
+          : userDetails.courseid === 3
+          ? "MCA, MBA"
+          : "Unknown"
       }</p>
       <!-- Add more user details here -->
-    `
+    `;
             if (userDetails.courseid == 1) {
-              document.getElementById('mcaQn').classList.add('visible')
+              document.getElementById("mcaQn").classList.add("visible");
             } else if (userDetails.courseid == 2) {
-              document.getElementById('mbaQn').classList.add('visible')
+              document.getElementById("mbaQn").classList.add("visible");
             } else if (userDetails.courseid == 3) {
-              document.getElementById('mcaQn').classList.add('visible')
-              document.getElementById('mbaQn').classList.add('visible')
+              document.getElementById("mcaQn").classList.add("visible");
+              document.getElementById("mbaQn").classList.add("visible");
             }
 
             // Call the next fetch with the extracted username
@@ -238,11 +269,11 @@
             //   })
           } else {
             // Redirect to login page if not authenticated
-            localStorage.removeItem('token')
-            window.location.href = '/login.html'
+            localStorage.removeItem("token");
+            window.location.href = "/login.html";
           }
         })
-        .catch((error) => console.error('Error fetching user details:', error))
+        .catch((error) => console.error("Error fetching user details:", error));
     </script>
   </body>
 </html>
