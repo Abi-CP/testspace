@@ -12,6 +12,53 @@
       .logoutBtn:hover {
         background-color: rgb(183, 0, 0);
       }
+      .qnBtn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        display: none;
+      }
+
+      .qnBtn.enabled {
+        background-color: #32cd32;
+        color: #fff;
+      }
+
+      .qnBtn.visible {
+        display: block;
+      }
+
+      .qnBtn.disabled {
+        background-color: #b0ffb0;
+        color: #999;
+        cursor: not-allowed;
+      }
+
+      .qnBtn.enabled:hover {
+        background-color: #228b22;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #dddddd;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+      tr:hover {
+        background-color: #dddddd;
+      }
     </style>
   </head>
   <body>
@@ -20,20 +67,16 @@
 
       <div id="navMenu">
         <button onclick="window.location.href = '/dashboard.html'">Dashboard</button>
+        
       </div>
       <!-- Initially hidden -->
     </nav>
-    <div class="sidebar" id="sidebar" style="left: -100%;">
+    <div class="sidebar" id="sidebar" style="left: -100%">
       <ul>
         <button onclick="window.location.href='/'">Home</button>
-        <button
-          class="logoutBtn"
-          onclick="localStorage.removeItem('token'); // Remove token from local storage
-    window.location.reload()"
-        >
-          Log out
-        </button>
         <button onclick="window.location.href = '/dashboard.html'">Dashboard</button>
+        <button onclick="window.location.href = '/upload.html'">Upload Answer Sheet</button>
+        <button class="logoutBtn" onclick="localStorage.removeItem('token'); window.location.reload()">Log out</button>
       </ul>
     </div>
 
@@ -45,6 +88,39 @@
         <!-- User details will be displayed here -->
       </div>
       <br />
+
+      <button id="mcaQn" class="qnBtn disabled">Download Question Paper [MCA]</button><br />
+      <button id="mbaQn" class="qnBtn disabled">Download Question Paper [MBA]</button>
+      <br /><br />
+      <div id="tableContainer" style="display: none;">
+        <h2>Marksheet</h2>
+        <table id="marksTable">
+          <thead>
+            <tr>
+              <th>Exam</th>
+              <th>Actual Score</th>
+              <th>Rank</th>
+              <th>Total no of candidates appeared</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr id="mcaRow">
+              <td>MCA</td>
+              <td id="mcaScore"></td>
+              <td id="mcaRank"></td>
+              <td id="mcaTotal"></td>
+            </tr>
+            <tr id="mbaRow">
+              <td>MBA</td>
+              <td id="mbaScore"></td>
+              <td id="mbaRank"></td>
+              <td id="mbaTotal"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <br />
+
       <button onclick="window.location.href='/download.html'">Download Answer Sheet</button>
       <button
         class="logoutBtn"
@@ -67,6 +143,46 @@
         window.location.href = '/login.html'
       }
 
+      var now = new Date()
+      console.log(now)
+      var targetTime1 = new Date()
+      targetTime1.setHours(9, 58, 30, 0)
+      var delay1 = targetTime1 - now
+
+      var targetTime2 = new Date()
+      targetTime2.setHours(12, 58, 30, 0)
+      var delay2 = targetTime2 - now
+
+      // Call enableButton function after the calculated delay
+      if (delay1 < 0) {
+        enableButton('mcaQn')
+      } else {
+        setTimeout(() => enableButton('mcaQn'), delay1)
+      }
+
+      if (delay2 < 0) {
+        enableButton('mbaQn')
+      } else {
+        setTimeout(() => enableButton('mbaQn'), delay2)
+      }
+
+      function enableButton(id) {
+        var button = document.getElementById(id)
+        button.classList.remove('disabled')
+        button.classList.add('enabled')
+        button.disabled = false
+
+        if (id == 'mcaQn') {
+          button.addEventListener('click', function () {
+            window.location.href = 'https://drive.google.com/drive/folders/17KrcpEnkjlKQ0mHt_d_AG5ys4BJw-qQi?usp=drive_link'
+          })
+        } else if (id == 'mbaQn') {
+          button.addEventListener('click', function () {
+            window.location.href = 'https://drive.google.com/drive/folders/16Xn8DlrljFWT0Fc_fAaX9SMlqHCATZCy?usp=drive_link'
+          })
+        }
+      }
+
       // Fetch user details using the token
       fetch('https://tancet-api.vercel.app/dashboard', {
         method: 'GET',
@@ -79,16 +195,47 @@
         .then((data) => {
           if (data.success) {
             const userDetails = data
+            // const username = userDetails.username // Extract username from the fetched data
             // Display user details on the page
             document.getElementById('userDetails').innerHTML = `
-            <p>Name: ${userDetails.name}</p>
-                    <p>Register Number: ${userDetails.rno}</p>
+      <p>Name: ${userDetails.name}</p>
+      <p>Register Number: ${userDetails.rno}</p>
       <p>Course(s): ${
         userDetails.courseid === 1 ? 'MCA' : userDetails.courseid === 2 ? 'MBA' : userDetails.courseid === 3 ? 'MCA, MBA' : 'Unknown'
       }</p>
-                    <!-- Add more user details here -->
-                `
-                console.log(userDetails.courseid)
+      <!-- Add more user details here -->
+    `
+            if (userDetails.courseid == 1) {
+              document.getElementById('mcaQn').classList.add('visible')
+            } else if (userDetails.courseid == 2) {
+              document.getElementById('mbaQn').classList.add('visible')
+            } else if (userDetails.courseid == 3) {
+              document.getElementById('mcaQn').classList.add('visible')
+              document.getElementById('mbaQn').classList.add('visible')
+            }
+
+            // Call the next fetch with the extracted username
+            // fetch('/marks', {
+            //   method: 'POST',
+            //   headers: {
+            //     'Content-Type': 'application/json',
+            //   },
+            //   body: JSON.stringify({ username: username }),
+            // })
+            //   .then((response) => {
+            //     if (response.ok) {
+            //       return response.json()
+            //     } else {
+            //       throw new Error('Failed to fetch data')
+            //     }
+            //   })
+            //   .then((data) => {
+            //     // Display table if result is successful
+            //     displayTable(data)
+            //   })
+            //   .catch((error) => {
+            //     console.error('Error:', error)
+            //   })
           } else {
             // Redirect to login page if not authenticated
             localStorage.removeItem('token')

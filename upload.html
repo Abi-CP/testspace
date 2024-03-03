@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload Answer Sheet</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .uploadBtn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      .uploadBtn.enabled {
+        background-color: #32cd32;
+        color: #fff;
+      }
+
+      .uploadBtn.disabled {
+        background-color: #b0ffb0;
+        color: #999;
+        cursor: not-allowed;
+      }
+
+      .uploadBtn.enabled:hover {
+        background-color: #228b22;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <h1 style="cursor: pointer" onclick="window.location.href ='/index.html'">TANCET 2024 Preparation</h1>
+      <div id="navMenu">
+        <button onclick="window.location.href = '/dashboard.html'">Dashboard</button>
+      </div>
+      <!-- Initially hidden -->
+    </nav>
+
+    <div class="sidebar" id="sidebar" style="left: -100%">
+      <ul>
+        <button onclick="window.location.href='/'">Home</button>
+        <button onclick="window.location.href = '/dashboard.html'">Dashboard</button>
+        <button onclick="window.location.href = '/upload.html'">Upload Answer Sheet</button>
+        <button class="logoutBtn" onclick="localStorage.removeItem('token'); window.location.reload()">Log out</button>
+      </ul>
+    </div>
+
+    <div class="hamburger" id="hamburger">&#9776;</div>
+
+    <main>
+      <h1>Upload Answer Sheet</h1>
+
+      <!-- MCA upload button -->
+      <button id="mcaUploadBtn" class="uploadBtn disabled" style="display: none">Upload Answer Sheet (MCA)</button>
+      <br /><br />
+      <!-- MBA upload button -->
+      <button id="mbaUploadBtn" class="uploadBtn disabled" style="display: none">Upload Answer Sheet (MBA)</button>
+    </main>
+
+    <script>
+      const hamburger = document.getElementById('hamburger')
+      const sidebar = document.getElementById('sidebar')
+      hamburger.addEventListener('click', function () {
+        sidebar.style.left = sidebar.style.left === '-100%' ? '0' : '-100%'
+      })
+
+      const token = localStorage.getItem('token')
+      if (!token) {
+        // If token is not found, redirect to the login page
+        window.location.href = '/login.html'
+      }
+
+      // Validate user authentication by sending token to the dashboard endpoint
+      fetch('https://tancet-api.vercel.app/dashboard', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (!data.success) {
+            // If authentication fails, remove token and redirect to login page
+            localStorage.removeItem('token')
+            window.location.href = '/login.html'
+          } else {
+            const courseid = data.courseid
+            const name = data.name
+            const rno = data.rno
+
+            // Enable the appropriate upload button(s) based on courseid
+            if (courseid === 1) {
+              displayButton('mcaUploadBtn')
+            } else if (courseid === 2) {
+              displayButton('mbaUploadBtn')
+            } else if (courseid === 3) {
+              displayButton('mcaUploadBtn')
+              displayButton('mbaUploadBtn')
+            }
+
+            // Calculate the delay until 10:00 AM for MCA button and 2:00 PM for MBA button
+            const now = new Date()
+            const targetTime1 = new Date(now)
+            targetTime1.setHours(10, 0, 0, 0)
+            const delay1 = targetTime1 - now
+
+            const targetTime2 = new Date(now)
+            targetTime2.setHours(14, 0, 0, 0)
+            const delay2 = targetTime2 - now
+
+            // Enable MCA button after the calculated delay
+            if (courseid === 1 || courseid === 3) {
+              setTimeout(() => enableButton('mcaUploadBtn', name, rno), delay1)
+            }
+
+            // Enable MBA button after the calculated delay
+            if (courseid === 2 || courseid === 3) {
+              setTimeout(() => enableButton('mbaUploadBtn', name, rno), delay2)
+            }
+          }
+        })
+        .catch((error) => {
+          console.error('Error validating user authentication:', error)
+          // Redirect to login page in case of an error
+          localStorage.removeItem('token')
+          window.location.href = '/login.html'
+        })
+
+      // Function to enable the button and add onclick event listener
+      function enableButton(id, name, rno) {
+        console.log(id)
+        const button = document.getElementById(id)
+        button.classList.remove('disabled')
+        button.classList.add('enabled')
+        button.disabled = false
+        button.addEventListener('click', function () {
+          if (id === 'mcaUploadBtn') {
+            window.location.href = `https://docs.google.com/forms/d/e/1FAIpQLScQCEq0daPQaodQZPeAk6BlHLlr-8hrZoRYzYdbwbl_MsXsUw/viewform?usp=pp_url&entry.1838262842=${name}&entry.1909320437=${rno}`
+          } else if (id === 'mbaUploadBtn') {
+            window.location.href = `https://docs.google.com/forms/d/e/1FAIpQLSdZ8bKzUuqBbjc7Drl6luTDayvxSCpV5pkSOv61u70YmnmKDQ/viewform?usp=pp_url&entry.1220634990=${name}&entry.870247093=${rno}`
+          }
+        })
+      }
+      function displayButton(id) {
+        const button = document.getElementById(id)
+        button.style.display = 'block'
+      }
+    </script>
+  </body>
+</html>

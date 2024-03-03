@@ -83,17 +83,16 @@
       <div id="navMenu">
         <button id="navLogin" class="loginBtn">Login</button>
         <button id="navLogout" class="logoutBtn" style="display: none">Logout</button>
-        <a href="#form" class="btn"></a>
+        <!-- <a href="#form" class="btn">Register</a> -->
       </div>
       <!-- Initially hidden -->
     </nav>
-    <div class="sidebar" id="sidebar" style="left: -100%;">
-
+    <div class="sidebar" id="sidebar" style="left: -100%">
       <ul>
         <button onclick="window.location.href='/'">Home</button>
-        <button id="sideBarLogin" class="loginBtn">Login</button>
-        <button id="sideBarLogout" class="logoutBtn" style="display: none">Logout</button>
         <button onclick="window.location.href = '/dashboard.html'">Dashboard</button>
+        <button onclick="window.location.href = '/upload.html'">Upload Answer Sheet</button>
+        <button class="logoutBtn" onclick="localStorage.removeItem('token'); window.location.reload()">Log out</button>
       </ul>
     </div>
 
@@ -103,16 +102,26 @@
       <div class="container">
         <h1>Notice Board</h1>
         <div class="notice">
-          <h2>Login Available</h2>
-          <p>Registered Candidates can Login to Download OMR Answer sheet. Make a printed copy ready to avaoid last minute rush.</p>
-          <button class="btn" onclick="window.location.href='/login.html'">Login</button>
+          <h2>Upload OMR Answer Sheet</h2>
+
+          <button class="btn" onclick="window.location.href='/upload.html'">Upload</button>
         </div>
         <div class="notice">
+          <h2>Download Question Paper</h2>
+
+          <button class="btn" onclick="window.location.href='/dashboard.html'">Download</button>
+        </div>
+        <div class="notice">
+          <h2>Login Available</h2>
+          <p>Registered Candidates can Login to Download OMR Answer sheet. Make a printed copy ready to avoid last minute rush.</p>
+          <button class="btn" onclick="window.location.href='/login.html'">Login</button>
+        </div>
+        <!-- <div class="notice">
           <h2>Register for Mock Test</h2>
           <a href="https://docs.google.com/forms/d/13WVM9GJ92FwRp2f0o02ZOV4ViilZ4PF4UUsXsHsjCIc/viewform?edit_requested=true#responses" class="btn" target="_blank">Register</a>
-        </div>
+        </div> -->
       </div>
-      <br>
+      <br />
       <h1>Hi Aspirants! Welcome to TANCET 2024 Model Test</h1>
 
       <h2>Test Details:</h2>
@@ -145,7 +154,7 @@
       <p>Join our Telegram channel <a href="https://t.me/tancet_2024">TANCET 2024</a> for updates and announcements.</p>
       <p>If you have any questions or need further assistance, feel free to reach out to us.</p>
       <p>Good luck with your preparations!</p>
-      <iframe id="form" src="https://docs.google.com/forms/d/e/1FAIpQLSf2UNvKvsd-eCkwQL3_clIX_fkGwlLV8aaYsGwOVo7-M7EtJg/viewform?embedded=true" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+      <!-- <iframe id="form" src="https://docs.google.com/forms/d/e/1FAIpQLSf2UNvKvsd-eCkwQL3_clIX_fkGwlLV8aaYsGwOVo7-M7EtJg/viewform?embedded=true" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe> -->
     </main>
 
     <script>
