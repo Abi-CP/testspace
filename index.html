@@ -92,7 +92,7 @@
         <button onclick="window.location.href='/'">Home</button>
         <button onclick="window.location.href = '/dashboard.html'">Dashboard</button>
         <button onclick="window.location.href = '/upload.html'">Upload Answer Sheet</button>
-        <button onclick="window.location.href = '/answerkey.html'">Tentative Answer key</button>
+        <button onclick="window.location.href = '/answerkey.html'">Final Answer key</button>
         <button class="logoutBtn" onclick="localStorage.removeItem('token'); window.location.reload()">Log out</button>
       </ul>
     </div>
@@ -103,6 +103,11 @@
       <div class="container">
         <h1>Notice Board</h1>
         <div class="notice">
+          <h2>Final Answer Key Released</h2>
+
+          <button class="btn" onclick="window.location.href='/answerkey.html'">Answer Key (Final)</button>
+        </div>
+        <!-- <div class="notice">
           <h2>Answer Key and Results:</h2>
           <p>
             Tenatative Answer Key will be published today (03.03.2024) evening 06.00 PM.. You can check and appeal upto tonight 10.00 PM.
@@ -110,7 +115,7 @@
           </p>
           <button class="btn" onclick="window.location.href='/answerkey.html'">Answer Key (Tenatative)</button>
 
-        </div>
+        </div> -->
         <div class="notice">
           <h2>Upload OMR Answer Sheet</h2>
 
