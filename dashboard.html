@@ -21,7 +21,7 @@
         display: none;
       }
 
-      .qnBtn.enabled {
+      .gnBtn , .qnBtn.enabled {
         background-color: #32cd32;
         color: #fff;
       }
@@ -36,7 +36,7 @@
         cursor: not-allowed;
       }
 
-      .qnBtn.enabled:hover {
+      .gnBtn:hover, .qnBtn.enabled:hover {
         background-color: #228b22;
       }
       table {
@@ -137,9 +137,10 @@
       </div>
       <br />
       <br/>
-      <p style="color: darkcyan;"><strong>Success is the cumulation of your everyday efforts</strong></p>
+      <p style="color: darkcyan;"><h3 style="text-align: center;">Success is the cumulation of your everyday efforts</h3></p>
       <br/>
-      <!-- <button onclick="window.location.href='/download.html'">Download Answer Sheet</button> -->
+      <button class="gnBtn" onclick="window.location.href='/MarksComparision.html'">View Result Comparision</button>
+      <br>
       <button
         class="logoutBtn"
         onclick="localStorage.removeItem('token'); // Remove token from local storage
