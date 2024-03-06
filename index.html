@@ -91,7 +91,7 @@
       <ul>
         <button onclick="window.location.href='/'">Home</button>
         <button onclick="window.location.href = '/dashboard.html'">Dashboard</button>
-        <button onclick="window.location.href = '/upload.html'">Upload Answer Sheet</button>
+        <!-- <button onclick="window.location.href = '/upload.html'">Upload Answer Sheet</button> -->
         <button onclick="window.location.href = '/answerkey.html'">Final Answer key</button>
         <button class="logoutBtn" onclick="localStorage.removeItem('token'); window.location.reload()">Log out</button>
       </ul>
@@ -102,6 +102,11 @@
     <main>
       <div class="container">
         <h1>Notice Board</h1>
+        <div class="notice">
+          <h2>Results Released</h2>
+
+          <button class="btn" onclick="window.location.href='/dashboard.html'">View Results</button>
+        </div>
         <div class="notice">
           <h2>Final Answer Key Released</h2>
 
@@ -116,16 +121,16 @@
           <button class="btn" onclick="window.location.href='/answerkey.html'">Answer Key (Tenatative)</button>
 
         </div> -->
-        <div class="notice">
+        <!-- <div class="notice">
           <h2>Upload OMR Answer Sheet</h2>
 
           <button class="btn" onclick="window.location.href='/upload.html'">Upload</button>
-        </div>
-        <div class="notice">
+        </div> -->
+        <!-- <div class="notice">
           <h2>Download Question Paper</h2>
 
           <button class="btn" onclick="window.location.href='/dashboard.html'">Download</button>
-        </div>
+        </div> -->
         <div class="notice">
           <h2>Login Available</h2>
           <p>Registered Candidates can Login to Download OMR Answer sheet. Make a printed copy ready to avoid last minute rush.</p>
@@ -187,19 +192,6 @@
         const navLogout = document.getElementById('navLogout')
         const sideBarLogin = document.getElementById('sideBarLogin')
         const sideBarLogout = document.getElementById('sideBarLogout')
-        if (token) {
-          // User is logged in
-          navLogin.style.display = 'none'
-          navLogout.style.display = 'inline-block'
-          sideBarLogin.style.display = 'none'
-          sideBarLogout.style.display = 'inline-block'
-        } else {
-          // User is not logged in
-          navLogin.style.display = 'inline-block'
-          navLogout.style.display = 'none'
-          sideBarLogin.style.display = 'inline-block'
-          sideBarLogout.style.display = 'none'
-        }
 
         // Add event listener to the login button
         const loginBtns = document.querySelectorAll('.loginBtn')
@@ -213,11 +205,26 @@
         const logoutBtns = document.querySelectorAll('.logoutBtn')
         logoutBtns.forEach(function (logoutBtn) {
           logoutBtn.addEventListener('click', function () {
+            console.log('logout')
             localStorage.removeItem('token') // Remove token from local storage
             window.location.reload() // Reload the page
           })
         })
       })
+
+      if (token) {
+        // User is logged in
+        navLogin.style.display = 'none'
+        navLogout.style.display = 'inline-block'
+        sideBarLogin.style.display = 'none'
+        sideBarLogout.style.display = 'inline-block'
+      } else {
+        // User is not logged in
+        navLogin.style.display = 'inline-block'
+        navLogout.style.display = 'none'
+        sideBarLogin.style.display = 'inline-block'
+        sideBarLogout.style.display = 'none'
+      }
     </script>
   </body>
 </html>

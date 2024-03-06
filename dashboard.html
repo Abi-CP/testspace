@@ -74,7 +74,7 @@
       <ul>
         <button onclick="window.location.href='/'">Home</button>
         <button onclick="window.location.href = '/dashboard.html'">Dashboard</button>
-        <button onclick="window.location.href = '/upload.html'">Upload Answer Sheet</button>
+        <!-- <button onclick="window.location.href = '/upload.html'">Upload Answer Sheet</button> -->
         <button onclick="window.location.href = '/answerkey.html'">Final Answer key</button>
         <button class="logoutBtn" onclick="localStorage.removeItem('token'); window.location.reload()">Log out</button>
       </ul>
@@ -94,10 +94,13 @@
       <br /><br />
       <div id="tableContainer">
         <h2>Marksheet</h2>
-        <table id="marksTable" style="text-align: center;display: none;">
+        <table id="marksTable" style="text-align: center">
           <thead>
             <tr>
               <th>Exam</th>
+              <th>Positive Score</th>
+              <th>Negative Score</th>
+              <th>Bonus</th>
               <th>Actual Score</th>
               <th>Rank</th>
               <th>Percentile</th>
@@ -107,24 +110,36 @@
           <tbody>
             <tr id="mcaRow">
               <td>MCA</td>
+              <td id="mcaPositive"></td>
+              <td id="mcaNegative"></td>
+              <td id="mcaBonus"></td>
+
               <td id="mcaScore"></td>
               <td id="mcaRank"></td>
               <td id="mcaPercentile"></td>
-              <td id="mcaTotal"></td>
+              <td id="mcaTotalAppeared">62</td>
             </tr>
             <tr id="mbaRow">
               <td>MBA</td>
+
+              <td id="mbaPositive"></td>
+              <td id="mbaNegative"></td>
+              <td id="mbaBonus"></td>
+
               <td id="mbaScore"></td>
               <td id="mbaRank"></td>
               <td id="mbaPercentile"></td>
-              <td id="mbaTotal"></td>
+              <td id="mbaTotalAppeared">111</td>
             </tr>
           </tbody>
         </table>
+        <p style="color: red;"><i>*Bonus marks are full marks given for Wrong answers</i></p>
       </div>
       <br />
-
-      <button onclick="window.location.href='/download.html'">Download Answer Sheet</button>
+      <br/>
+      <p style="color: darkcyan;"><strong>Success is the cumulation of your everyday efforts</strong></p>
+      <br/>
+      <!-- <button onclick="window.location.href='/download.html'">Download Answer Sheet</button> -->
       <button
         class="logoutBtn"
         onclick="localStorage.removeItem('token'); // Remove token from local storage
@@ -198,6 +213,7 @@
         .then((data) => {
           if (data.success) {
             const userDetails = data
+            // const rno
             // const username = userDetails.username // Extract username from the fetched data
             // Display user details on the page
             document.getElementById('userDetails').innerHTML = `
@@ -208,36 +224,47 @@
       }</p>
       <!-- Add more user details here -->
     `
-            if (userDetails.courseid == 1) {
-              document.getElementById('mcaQn').classList.add('visible')
-            } else if (userDetails.courseid == 2) {
-              document.getElementById('mbaQn').classList.add('visible')
-            } else if (userDetails.courseid == 3) {
-              document.getElementById('mcaQn').classList.add('visible')
-              document.getElementById('mbaQn').classList.add('visible')
-            }
+            // if (userDetails.courseid == 1) {
+            //   document.getElementById('mcaQn').classList.add('visible')
+            // } else if (userDetails.courseid == 2) {
+            //   document.getElementById('mbaQn').classList.add('visible')
+            // } else if (userDetails.courseid == 3) {
+            //   document.getElementById('mcaQn').classList.add('visible')
+            //   document.getElementById('mbaQn').classList.add('visible')
+            // }
 
-            // Call the next fetch with the extracted username
-            fetch('/marks', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ username: userDetails.rno }),
-            })
+            console.log(userDetails.rno + userDetails.courseid)
+            fetch(`https://tancet-api.vercel.app/marks?rno=${userDetails.rno}&courseid=${userDetails.courseid}`)
               .then((response) => {
-                if (response.ok) {
-                  return response.json()
-                } else {
-                  throw new Error('Failed to fetch data')
+                if (!response.ok) {
+                  throw new Error('Network response was not ok')
                 }
+                return response.json()
               })
               .then((data) => {
-                // Display table if result is successful
-                displayTable(data)
+                const mca = data[0].mca !== -1 ? data[0].mca : null
+                const mba = data[1].mba !== -1 ? data[1].mba : null
+
+                // console.log('Total marks for MCA:', mca)
+                // console.log('Total marks for MBA:', mba)
+
+                if (mca) {
+                  updateTableCells('mca', mca)
+                } else {
+                  setTableCellsToNil('mca')
+                  console.log('MCA data not found')
+                }
+
+                if (mba) {
+                  const mbaData = data.mba
+                  updateTableCells('mba', mba)
+                } else {
+                  setTableCellsToNil('mba')
+                  console.log('MBA data not found')
+                }
               })
               .catch((error) => {
-                console.error('Error:', error)
+                console.error('Error fetching marks data:', error)
               })
           } else {
             // Redirect to login page if not authenticated
@@ -247,12 +274,26 @@
         })
         .catch((error) => console.error('Error fetching user details:', error))
 
-      function displayTable(data) {
+      function updateTableCells(exam, data) {
+        const prefix = exam === 'mca' ? 'mca' : 'mba'
         const marks = data.marks
-        const ranks = data.ranks
-        const total = data.total
+        const row = document.getElementById(`${prefix}Row`)
 
-        let percentile = ranks / (total - ranks)
+        row.cells[1].textContent = marks.positive !== -1 ? marks.positive : 'nil'
+        row.cells[2].textContent = marks.negative !== -1 ? marks.negative : 'nil'
+        row.cells[3].textContent = marks.bonus !== -1 ? marks.bonus : 'nil'
+        row.cells[4].textContent = marks.total !== -1 ? marks.total : 'nil'
+        row.cells[5].textContent = data.rank !== -1 ? data.rank : 'nil'
+        row.cells[6].textContent = data.percentile.toFixed(2) !== -1 ? data.percentile.toFixed(2) : 'nil'
+      }
+
+      function setTableCellsToNil(exam) {
+        const prefix = exam === 'mca' ? 'mca' : 'mba'
+        const row = document.getElementById(`${prefix}Row`)
+
+        for (let i = 1; i <= 6; i++) {
+          row.cells[i].textContent = '-'
+        }
       }
     </script>
   </body>
