@@ -21,7 +21,8 @@
         display: none;
       }
 
-      .gnBtn , .qnBtn.enabled {
+      .gnBtn,
+      .qnBtn.enabled {
         background-color: #32cd32;
         color: #fff;
       }
@@ -36,7 +37,8 @@
         cursor: not-allowed;
       }
 
-      .gnBtn:hover, .qnBtn.enabled:hover {
+      .gnBtn:hover,
+      .qnBtn.enabled:hover {
         background-color: #228b22;
       }
       table {
@@ -133,14 +135,15 @@
             </tr>
           </tbody>
         </table>
-        <p style="color: red;"><i>*Bonus marks are full marks given for Wrong answers</i></p>
+        <p style="color: red"><i>*Bonus marks are full marks given for Wrong answers</i></p>
       </div>
       <br />
-      <br/>
-      <p style="color: darkcyan;"><h3 style="text-align: center;">Success is the cumulation of your everyday efforts</h3></p>
-      <br/>
+      <br />
+      <h3 style="color: darkcyan; text-align: center">Success is the cumulation of your everyday efforts</h3>
+      <br />
       <button class="gnBtn" onclick="window.location.href='/MarksComparision.html'">View Result Comparision</button>
-      <br>
+      <br />
+      <br/>
       <button
         class="logoutBtn"
         onclick="localStorage.removeItem('token'); // Remove token from local storage
